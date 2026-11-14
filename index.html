@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khu Vườn Cổ Tích Kỷ Yếu</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            /* Nền caro hồng kem pastel dịu mắt */
+            background-color: #fff6f8;
+            background-image:
+                linear-gradient(90deg, rgba(255, 209, 220, 0.35) 50%, transparent 50%),
+                linear-gradient(rgba(255, 209, 220, 0.35) 50%, transparent 50%);
+            background-size: 46px 46px;
+        }
+
+        /* Lớp ánh sáng pastel mờ ảo */
+        .pastel-glow {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.78) 0%, rgba(255, 232, 239, 0.45) 55%, rgba(226, 240, 249, 0.5) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Lâu đài cổ tích pastel phía xa */
+        .castle-bg {
+            position: fixed;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 340px;
+            opacity: 0.25;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* 5 đám mây bồng bềnh */
+        .cloud {
+            position: fixed;
+            pointer-events: none;
+            z-index: 3;
+            filter: drop-shadow(0 8px 16px rgba(235, 175, 195, 0.25));
+            animation: floatCloud linear infinite;
+        }
+        .c1 { top: 4%; left: -15%; width: 220px; animation-duration: 38s; }
+        .c2 { top: 14%; left: 65%; width: 190px; animation-duration: 44s; animation-delay: -12s; }
+        .c3 { top: 28%; left: 10%; width: 170px; animation-duration: 42s; animation-delay: -20s; }
+        .c4 { top: 8%; left: 32%; width: 240px; animation-duration: 48s; animation-delay: -8s; }
+        .c5 { top: 35%; left: 75%; width: 160px; animation-duration: 36s; animation-delay: -15s; }
+
+        @keyframes floatCloud {
+            0% { transform: translateX(-180px) translateY(0px); }
+            50% { transform: translateX(180px) translateY(-10px); }
+            100% { transform: translateX(-180px) translateY(0px); }
+        }
+
+        /* Vòm dây hoa ruy băng trên cao */
+        .top-garland {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 75px;
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        /* Hai bụi hoa cổ tích ở góc dưới */
+        .corner-bush {
+            position: fixed;
+            bottom: -5px;
+            width: 210px;
+            pointer-events: none;
+            z-index: 6;
+            filter: drop-shadow(0 5px 12px rgba(210, 150, 170, 0.22));
+        }
+        .bush-left { left: -8px; }
+        .bush-right { right: -8px; transform: scaleX(-1); }
+
+        /* Bướm tiên pastel bay lượn */
+        .butterfly {
+            position: fixed;
+            width: 28px;
+            height: 28px;
+            pointer-events: none;
+            z-index: 7;
+            animation: flutter 12s ease-in-out infinite;
+        }
+        .b1 { top: 22%; left: 18%; animation-delay: 0s; }
+        .b2 { top: 30%; right: 20%; animation-delay: -4s; }
+        .b3 { bottom: 26%; left: 24%; animation-delay: -8s; }
+
+        @keyframes flutter {
+            0%, 100% { transform: translate(0, 0) rotate(-6deg) scale(1); }
+            25% { transform: translate(22px, -18px) rotate(8deg) scale(1.06); }
+            50% { transform: translate(40px, 5px) rotate(-4deg) scale(0.96); }
+            75% { transform: translate(15px, 18px) rotate(6deg) scale(1.04); }
+        }
+
+        /* Hoa rơi nhẹ trong nền */
+        .falling-flower {
+            position: fixed;
+            top: -40px;
+            pointer-events: none;
+            z-index: 8;
+            animation: fallDown linear infinite;
+        }
+        @keyframes fallDown {
+            0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0; }
+            12% { opacity: 0.85; }
+            88% { opacity: 0.85; }
+            100% { transform: translateY(112vh) rotate(360deg) translateX(35px); opacity: 0; }
+        }
+
+        /* Khung giao diện chính chung */
+        .stage-card {
+            position: relative;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(8px);
+            border: 2px solid #ffd6e0;
+            border-radius: 28px;
+            padding: 26px 24px;
+            width: 330px;
+            max-width: 92vw;
+            box-shadow: 0 18px 40px rgba(226, 155, 178, 0.25), inset 0 0 0 4px rgba(255, 245, 248, 0.8);
+            text-align: center;
+            transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .hidden {
+            display: none !important;
+        }
+
+        .stage-title {
+            color: #9e586d;
+            font-size: 17px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            letter-spacing: 0.3px;
+        }
+
+        .note-box {
+            background: #fff4f7;
+            border: 1.5px dashed #f4b6c6;
+            border-radius: 16px;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+            color: #8c5264;
+            font-size: 13.5px;
+            line-height: 1.45;
+        }
+
+        /* --- BƯỚC 1: Ổ KHÓA SỐ 2906 --- */
+        .pin-dots {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin: 16px 0 20px;
+        }
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #f0a8bc;
+            background: #fff;
+            transition: all 0.25s ease;
+        }
+        .pin-dot.filled {
+            background: #f28ba8;
+            border-color: #e67394;
+            transform: scale(1.18);
+            box-shadow: 0 0 10px rgba(242, 139, 168, 0.5);
+        }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 240px;
+            margin: 0 auto;
+        }
+        .key-btn {
+            background: linear-gradient(180deg, #ffffff 0%, #fff0f4 100%);
+            border: 1.5px solid #f7c6d4;
+            border-radius: 18px;
+            height: 48px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #9e586d;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #f2bac9;
+            transition: all 0.12s ease;
+        }
+        .key-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #f2bac9;
+        }
+        .key-btn.action-key {
+            font-size: 14px;
+            background: #fdf2f5;
+            color: #b57286;
+        }
+        .shake {
+            animation: shakeAnim 0.4s ease;
+        }
+        @keyframes shakeAnim {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-6px); }
+        }
+
+        /* Nút bấm pastel */
+        .pastel-btn {
+            background: linear-gradient(135deg, #f8a5bc 0%, #f38ba8 100%);
+            color: #fff;
+            border: none;
+            border-radius: 22px;
+            padding: 12px 26px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(243, 139, 168, 0.35);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .pastel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(243, 139, 168, 0.45);
+        }
+        .pastel-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* --- TRÒ CHƠI 1: HỨNG 5 BÔNG HOA --- */
+        .catch-area {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(180deg, #fff8fa 0%, #f4fbf9 100%);
+            border: 1.5px solid #f7cad6;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .game-flower-target {
+            position: absolute;
+            top: -42px;
+            width: 42px;
+            height: 42px;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+            z-index: 5;
+        }
+        .game-flower-target:active {
+            transform: scale(1.3);
+        }
+        .score-badge {
+            display: inline-block;
+            background: #ffe8ef;
+            color: #9e586d;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 5px 14px;
+            border-radius: 14px;
+        }
+
+        /* --- TRÒ CHƠI 2: LẬT THẺ GHÉP ĐÔI --- */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .mem-card {
+            height: 76px;
+            background: linear-gradient(135deg, #ffdbe5 0%, #e5f4f8 100%);
+            border: 2px solid #ffffff;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 12px rgba(215, 155, 175, 0.22);
+            transition: transform 0.35s ease, background 0.35s ease;
+            position: relative;
+        }
+        .mem-card.flipped, .mem-card.matched {
+            background: #ffffff;
+            border-color: #f6b8ca;
+            transform: rotateY(180deg);
+        }
+        .mem-card .card-front {
+            display: none;
+            transform: rotateY(180deg);
+        }
+        .mem-card.flipped .card-front, .mem-card.matched .card-front {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mem-card.flipped .card-back, .mem-card.matched .card-back {
+            display: none;
+        }
+
+        /* --- BƯỚC 4: PHONG BÌ THƯ --- */
+        .envelope-stage {
+            position: relative;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .envelope-wrapper {
+            position: relative;
+            width: 310px;
+            height: 210px;
+            background-color: #f6a6bb;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 18px 38px rgba(218, 130, 156, 0.32);
+            cursor: pointer;
+            transition: transform 0.35s ease;
+        }
+        .envelope-wrapper:hover {
+            transform: scale(1.03);
+        }
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 155px solid transparent;
+            border-right: 155px solid transparent;
+            border-top: 118px solid #ea89a3;
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out, z-index 0.6s;
+            z-index: 4;
+        }
+        .pocket {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 155px solid #fbc1d0;
+            border-right: 155px solid #fbc1d0;
+            border-bottom: 105px solid #f6a6bb;
+            border-top: 105px solid transparent;
+            border-radius: 0 0 16px 16px;
+            z-index: 3;
+        }
+        .wax-seal {
+            position: absolute;
+            top: 86px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 44px;
+            height: 44px;
+            z-index: 5;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            filter: drop-shadow(0 3px 6px rgba(180, 90, 115, 0.25));
+        }
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+        .envelope-wrapper.open .wax-seal {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.5);
+        }
+
+        /* Hiệu ứng hoa nở tràn màn hình rồi biến mất */
+        .burst-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 95;
+            overflow: hidden;
+        }
+        .burst-flower {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0) rotate(0deg);
+            animation: burstAndFade 1.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes burstAndFade {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.1) rotate(0deg);
+            }
+            22% {
+                opacity: 1;
+            }
+            65% {
+                opacity: 1;
+                transform: translate(var(--tx), var(--ty)) scale(var(--sc)) rotate(var(--rot));
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), calc(var(--ty) + 25px)) scale(calc(var(--sc) * 1.12)) rotate(calc(var(--rot) + 45deg));
+            }
+        }
+
+        /* Tấm thiệp kỷ yếu hiển thị rõ nét 100% không lớp phủ che mờ */
+        .photo-viewer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.85);
+            width: 92vw;
+            height: 84vh;
+            max-width: 880px;
+            max-height: 880px;
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+        }
+        .photo-viewer.visible {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+        .photo-viewer img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 14px;
+            box-shadow: 0 22px 55px rgba(145, 85, 105, 0.35);
+            display: block;
+        }
+
+        /* --- BƯỚC 5: LỜI CẢM ƠN KẾT THÚC --- */
+        .ending-message {
+            color: #8f4d61;
+            font-size: 16.5px;
+            font-weight: 600;
+            line-height: 1.65;
+            margin: 10px 0 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="pastel-glow"></div>
+
+    <!-- Lâu đài cổ tích pastel phía xa -->
+    <svg class="castle-bg" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40 190V110H75V190H40Z" fill="#e6d7f5"/>
+        <path d="M35 110L57.5 68L80 110H35Z" fill="#f7c8dc"/>
+        <path d="M245 190V110H280V190H245Z" fill="#e6d7f5"/>
+        <path d="M240 110L262.5 68L285 110H240Z" fill="#f7c8dc"/>
+        <path d="M90 190V85H230V190H90Z" fill="#ede2f7"/>
+        <path d="M135 85V45H185V85H135Z" fill="#e3d2f4"/>
+        <path d="M128 45L160 10L192 45H128Z" fill="#f5bdd6"/>
+        <path d="M85 85L108 52L131 85H85Z" fill="#f7c8dc"/>
+        <path d="M189 85L212 52L235 85H189Z" fill="#f7c8dc"/>
+        <path d="M142 190V145C142 135 178 135 178 145V190H142Z" fill="#ffffff"/>
+    </svg>
+
+    <!-- 5 đám mây bồng bềnh -->
+    <svg class="cloud c1" viewBox="0 0 200 90" fill="none">
+        <path d="M45 72H158C176 72 188 60 188 45C188 31 177 20 163 19C158 7 146 0 132 0C118 0 106 8 101 19C95 15 88 13 80 13C62 13 48 26 46 43C31 44 20 55 20 68C20 70 31 72 45 72Z" fill="url(#cloudGrad)"/>
+        <defs>
+            <linearGradient id="cloudGrad" x1="100" y1="0" x2="100" y2="72" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ffffff"/>
+                <stop offset="1" stop-color="#ffeef3"/>
+            </linearGradient>
+        </defs>
+    </svg>
+    <svg class="cloud c2" viewBox="0 0 200 90" fill="none">
+        <path d="M45 72H158C176 72 188 60 188 45C188 31 177 20 163 19C158 7 146 0 132 0C118 0 106 8 101 19C95 15 88 13 80 13C62 13 48 26 46 43C31 44 20 55 20 68C20 70 31 72 45 72Z" fill="url(#cloudGrad)"/>
+    </svg>
+    <svg class="cloud c3" viewBox="0 0 200 90" fill="none">
+        <path d="M45 72H158C176 72 188 60 188 45C188 31 177 20 163 19C158 7 146 0 132 0C118 0 106 8 101 19C95 15 88 13 80 13C62 13 48 26 46 43C31 44 20 55 20 68C20 70 31 72 45 72Z" fill="url(#cloudGrad)"/>
+    </svg>
+    <svg class="cloud c4" viewBox="0 0 200 90" fill="none">
+        <path d="M45 72H158C176 72 188 60 188 45C188 31 177 20 163 19C158 7 146 0 132 0C118 0 106 8 101 19C95 15 88 13 80 13C62 13 48 26 46 43C31 44 20 55 20 68C20 70 31 72 45 72Z" fill="url(#cloudGrad)"/>
+    </svg>
+    <svg class="cloud c5" viewBox="0 0 200 90" fill="none">
+        <path d="M45 72H158C176 72 188 60 188 45C188 31 177 20 163 19C158 7 146 0 132 0C118 0 106 8 101 19C95 15 88 13 80 13C62 13 48 26 46 43C31 44 20 55 20 68C20 70 31 72 45 72Z" fill="url(#cloudGrad)"/>
+    </svg>
+
+    <!-- Vòm dây hoa ruy băng trên cao -->
+    <svg class="top-garland" viewBox="0 0 1200 90" preserveAspectRatio="none">
+        <path d="M0,0 Q300,75 600,18 Q900,75 1200,0" stroke="#c8e6df" stroke-width="4" fill="none"/>
+        <path d="M0,8 Q300,82 600,24 Q900,82 1200,8" stroke="#f8c8d8" stroke-width="3" stroke-dasharray="8 6" fill="none"/>
+    </svg>
+
+    <!-- Bướm tiên pastel -->
+    <div class="butterfly b1" id="butterfly1"></div>
+    <div class="butterfly b2" id="butterfly2"></div>
+    <div class="butterfly b3" id="butterfly3"></div>
+
+    <!-- Hai bụi hoa cổ tích góc dưới (giống ban đầu) -->
+    <div class="corner-bush bush-left" id="bushLeft"></div>
+    <div class="corner-bush bush-right" id="bushRight"></div>
+
+    <!-- BƯỚC 1: Ổ KHÓA MẬT MÃ 2906 -->
+    <div class="stage-card" id="lockStage">
+        <svg width="44" height="44" viewBox="0 0 60 60" style="margin-bottom: 6px;">
+            <path d="M20 26V19C20 13.5 24.5 9 30 9C35.5 9 40 13.5 40 19V26" stroke="#e894ad" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+            <rect x="13" y="25" width="34" height="26" rx="10" fill="#ffd9e4" stroke="#e894ad" stroke-width="3"/>
+            <circle cx="30" cy="36" r="3.5" fill="#b8657e"/>
+            <path d="M30 39V44" stroke="#b8657e" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div class="stage-title">Nhập mật mã mở khu vườn</div>
+        <div class="pin-dots" id="pinDots">
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+        </div>
+        <div class="keypad">
+            <button class="key-btn" onclick="pressKey('1')">1</button>
+            <button class="key-btn" onclick="pressKey('2')">2</button>
+            <button class="key-btn" onclick="pressKey('3')">3</button>
+            <button class="key-btn" onclick="pressKey('4')">4</button>
+            <button class="key-btn" onclick="pressKey('5')">5</button>
+            <button class="key-btn" onclick="pressKey('6')">6</button>
+            <button class="key-btn" onclick="pressKey('7')">7</button>
+            <button class="key-btn" onclick="pressKey('8')">8</button>
+            <button class="key-btn" onclick="pressKey('9')">9</button>
+            <button class="key-btn action-key" onclick="clearPin()">Xóa</button>
+            <button class="key-btn" onclick="pressKey('0')">0</button>
+            <button class="key-btn action-key" onclick="delOne()">←</button>
+        </div>
+    </div>
+
+    <!-- BƯỚC 1.5: LỜI NHẮN CHÀO MỪNG TRƯỚC KHI VÀO TRÒ CHƠI -->
+    <div class="stage-card hidden" id="introStage">
+        <div id="introFlowerIcon" style="width: 52px; height: 52px; margin: 0 auto 10px;"></div>
+        <div class="stage-title" style="font-size: 17.5px; line-height: 1.5; margin-bottom: 18px;">
+            vượt qua hai thử thách nhỏ để đến với bức thư nhaa
+        </div>
+        <button class="pastel-btn" onclick="startGame1()">Bắt đầu ngay</button>
+    </div>
+
+    <!-- BƯỚC 2: TRÒ CHƠI 1 - HỨNG 5 BÔNG HOA -->
+    <div class="stage-card hidden" id="game1Stage">
+        <div class="stage-title">Thử thách 1: Hứng Hoa Phép Thuật</div>
+        <div class="note-box">
+            <strong>Hướng dẫn:</strong> Chạm vào những bông hoa pastel đang rơi trong khung vườn bên dưới để thu thập đủ 5 bông hoa nhé.
+        </div>
+        <div class="catch-area" id="catchArea"></div>
+        <div class="score-badge" id="catchScore">Đã hứng: 0 / 5 bông hoa</div>
+    </div>
+
+    <!-- BƯỚC 3: TRÒ CHƠI 2 - LẬT THẺ GHÉP ĐÔI -->
+    <div class="stage-card hidden" id="game2Stage">
+        <div class="stage-title">Thử thách 2: Lật Thẻ Kỷ Vật</div>
+        <div class="note-box">
+            <strong>Hướng dẫn:</strong> Lật mở lần lượt hai tấm thẻ bất kỳ để tìm đủ 3 cặp biểu tượng cổ tích giống nhau.
+        </div>
+        <div class="memory-grid" id="memoryGrid"></div>
+    </div>
+
+    <!-- BƯỚC 4: PHONG BÌ THƯ TƯƠNG TÁC -->
+    <div class="envelope-stage hidden" id="envelopeStage">
+        <div class="envelope-wrapper" id="envelope" onclick="openLetter()">
+            <div class="flap"></div>
+            <div class="wax-seal">
+                <svg viewBox="0 0 50 50">
+                    <circle cx="25" cy="25" r="21" fill="#f28aa7" stroke="#ffffff" stroke-width="2.5"/>
+                    <path d="M25 34C25 34 15 27.5 15 21C15 17.8 17.5 15.5 20.5 15.5C22.4 15.5 24.1 16.5 25 18C25.9 16.5 27.6 15.5 29.5 15.5C32.5 15.5 35 17.8 35 21C35 27.5 25 34 25 34Z" fill="#ffffff"/>
+                </svg>
+            </div>
+            <div class="pocket"></div>
+        </div>
+    </div>
+
+    <!-- LỚP HOA NỞ TRÀN MÀN HÌNH RỒI BIẾN MẤT -->
+    <div class="burst-layer" id="burstLayer"></div>
+
+    <!-- TẤM THIỆP KỶ YẾU RÕ NÉT 100% KHÔNG LỚP PHỦ CHE MỜ -->
+    <div class="photo-viewer" id="photoViewer" onclick="closePhotoAndEnd()">
+        <img src="thiep.jpg" alt="Thiệp kỷ yếu">
+    </div>
+
+    <!-- BƯỚC 5: LỜI CẢM ƠN KẾT THÚC SAU KHI ĐÓNG THƯ -->
+    <div class="stage-card hidden" id="endingStage">
+        <div id="endingFlowerIcon" style="width: 50px; height: 50px; margin: 0 auto 8px;"></div>
+        <div class="ending-message">
+            cảm ơn vì đã đi đến đây nhaa, mong cậu sẽ giành 1 chút thời gian nhỏ để đến gặp mai vào ngày đó nhé💕
+        </div>
+        <button class="pastel-btn" onclick="reopenPhoto()">Xem lại tấm thiệp</button>
+    </div>
+
+    <!-- NHẠC NỀN TỰ ĐỘNG PHÁT TỪ GIÂY 0:57 -->
+    <audio id="bgMusic" preload="auto">
+        <source src="nhac.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        /* --- ĐỒ HỌA HOA PASTEL GIỐNG BAN ĐẦU --- */
+        function createFlowerSVG(petalColor, centerColor) {
+            return `
+            <svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(50,50)">
+                    <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="${petalColor}" transform="rotate(0)"/>
+                    <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="${petalColor}" transform="rotate(72)"/>
+                    <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="${petalColor}" transform="rotate(144)"/>
+                    <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="${petalColor}" transform="rotate(216)"/>
+                    <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="${petalColor}" transform="rotate(288)"/>
+                    <circle cx="0" cy="0" r="10" fill="${centerColor}"/>
+                </g>
+            </svg>`;
+        }
+
+        const pastelPalettes = [
+            ['#ffb7c9', '#fff0f4'],
+            ['#ffc8d7', '#ffffff'],
+            ['#d8f1eb', '#ffffff'],
+            ['#e5d9f6', '#fff5f8'],
+            ['#ffd8be', '#ffffff']
+        ];
+
+        /* Trang trí bướm tiên */
+        const butterflySVG = `
+        <svg viewBox="0 0 60 60" width="100%" height="100%">
+            <path d="M30 30 C16 10, 4 18, 12 32 C6 42, 18 50, 30 34 Z" fill="#ffd6e2" stroke="#e59bb1" stroke-width="1.5"/>
+            <path d="M30 30 C44 10, 56 18, 48 32 C54 42, 42 50, 30 34 Z" fill="#d9f2ec" stroke="#9fd3c7" stroke-width="1.5"/>
+            <line x1="30" y1="20" x2="30" y2="42" stroke="#b57a8c" stroke-width="2" stroke-linecap="round"/>
+        </svg>`;
+        document.getElementById('butterfly1').innerHTML = butterflySVG;
+        document.getElementById('butterfly2').innerHTML = butterflySVG;
+        document.getElementById('butterfly3').innerHTML = butterflySVG;
+
+        /* Trang trí hai bụi hoa góc dưới giống ban đầu */
+        const bushSVG = `
+        <svg viewBox="0 0 220 150" width="100%" height="100%">
+            <path d="M0 150 C10 95, 55 75, 95 95 C120 75, 165 85, 185 120 C205 125, 215 140, 220 150 Z" fill="#d8efe8"/>
+            <path d="M0 150 C15 110, 50 100, 80 115 C105 100, 145 110, 160 150 Z" fill="#c5e6dc"/>
+            <!-- Nấm cổ tích pastel -->
+            <rect x="42" y="102" width="12" height="22" rx="5" fill="#fff8f5"/>
+            <path d="M30 104 C30 86, 66 86, 66 104 Z" fill="#f9b4c6"/>
+            <circle cx="42" cy="96" r="2.5" fill="#ffffff"/>
+            <circle cx="54" cy="95" r="2.5" fill="#ffffff"/>
+            <!-- Nơ pastel -->
+            <g transform="translate(115, 118)">
+                <path d="M0 0 C-14 -10, -18 8, 0 4 C18 8, 14 -10, 0 0 Z" fill="#b7e4dc"/>
+                <circle cx="0" cy="2" r="3.5" fill="#ffffff"/>
+            </g>
+            <!-- Hoa 5 cánh pastel giống ban đầu -->
+            <g transform="translate(78, 86) scale(0.42)">
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#ffb7c9" transform="rotate(0)"/>
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#ffb7c9" transform="rotate(72)"/>
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#ffb7c9" transform="rotate(144)"/>
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#ffb7c9" transform="rotate(216)"/>
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#ffb7c9" transform="rotate(288)"/>
+                <circle cx="0" cy="0" r="10" fill="#fff5f8"/>
+            </g>
+            <g transform="translate(135, 96) scale(0.36)">
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#e5d9f6" transform="rotate(0)"/>
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#e5d9f6" transform="rotate(72)"/>
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#e5d9f6" transform="rotate(144)"/>
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#e5d9f6" transform="rotate(216)"/>
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#e5d9f6" transform="rotate(288)"/>
+                <circle cx="0" cy="0" r="10" fill="#ffffff"/>
+            </g>
+            <g transform="translate(26, 126) scale(0.32)">
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#ffd8be" transform="rotate(0)"/>
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#ffd8be" transform="rotate(72)"/>
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#ffd8be" transform="rotate(144)"/>
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#ffd8be" transform="rotate(216)"/>
+                <path d="M0,0 C-15,-25 -10,-45 0,-48 C10,-45 15,-25 0,0" fill="#ffd8be" transform="rotate(288)"/>
+                <circle cx="0" cy="0" r="10" fill="#ffffff"/>
+            </g>
+        </svg>`;
+        document.getElementById('bushLeft').innerHTML = bushSVG;
+        document.getElementById('bushRight').innerHTML = bushSVG;
+
+        document.getElementById('introFlowerIcon').innerHTML = createFlowerSVG('#ffb7c9', '#fff5f8');
+        document.getElementById('endingFlowerIcon').innerHTML = createFlowerSVG('#ffb7c9', '#fff5f8');
+
+        /* Hoa rơi nhẹ trong nền */
+        for (let i = 0; i < 22; i++) {
+            const fl = document.createElement('div');
+            fl.className = 'falling-flower';
+            const pal = pastelPalettes[i % pastelPalettes.length];
+            fl.innerHTML = createFlowerSVG(pal[0], pal[1]);
+            const size = 16 + Math.random() * 14;
+            fl.style.width = size + 'px';
+            fl.style.height = size + 'px';
+            fl.style.left = Math.random() * 100 + 'vw';
+            fl.style.animationDuration = (7 + Math.random() * 6) + 's';
+            fl.style.animationDelay = (-Math.random() * 10) + 's';
+            document.body.appendChild(fl);
+        }
+
+        /* --- NHẠC NỀN TỰ ĐỘNG PHÁT TỪ GIÂY 0:57 --- */
+        const audio = document.getElementById('bgMusic');
+        const START_TIME = 57;
+        let musicStarted = false;
+
+        function tryStartMusic() {
+            if (musicStarted) return;
+            audio.currentTime = START_TIME;
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    musicStarted = true;
+                }).catch(() => {});
+            }
+        }
+
+        audio.addEventListener('ended', () => {
+            audio.currentTime = START_TIME;
+            audio.play().catch(() => {});
+        });
+
+        window.addEventListener('load', tryStartMusic);
+        document.addEventListener('pointerdown', tryStartMusic, { once: false });
+        document.addEventListener('keydown', tryStartMusic, { once: false });
+
+        /* --- BƯỚC 1: XỬ LÝ MẬT KHẨU 2906 --- */
+        let currentPin = '';
+        const TARGET_PIN = '2906';
+        const dots = document.querySelectorAll('.pin-dot');
+        const lockStage = document.getElementById('lockStage');
+
+        function updateDots() {
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('filled', idx < currentPin.length);
+            });
+        }
+
+        function pressKey(num) {
+            tryStartMusic();
+            if (currentPin.length >= 4) return;
+            currentPin += num;
+            updateDots();
+
+            if (currentPin.length === 4) {
+                if (currentPin === TARGET_PIN) {
+                    setTimeout(() => {
+                        lockStage.classList.add('hidden');
+                        document.getElementById('introStage').classList.remove('hidden');
+                    }, 260);
+                } else {
+                    lockStage.classList.add('shake');
+                    setTimeout(() => {
+                        lockStage.classList.remove('shake');
+                        currentPin = '';
+                        updateDots();
+                    }, 420);
+                }
+            }
+        }
+
+        function clearPin() {
+            tryStartMusic();
+            currentPin = '';
+            updateDots();
+        }
+
+        function delOne() {
+            tryStartMusic();
+            currentPin = currentPin.slice(0, -1);
+            updateDots();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (lockStage.classList.contains('hidden')) return;
+            if (e.key >= '0' && e.key <= '9') pressKey(e.key);
+            if (e.key === 'Backspace') delOne();
+            if (e.key === 'Escape') clearPin();
+        });
+
+        /* --- BƯỚC 2: TRÒ CHƠI 1 - HỨNG 5 BÔNG HOA --- */
+        let caughtCount = 0;
+        let spawnTimer = null;
+
+        function startGame1() {
+            tryStartMusic();
+            document.getElementById('introStage').classList.add('hidden');
+            document.getElementById('game1Stage').classList.remove('hidden');
+            caughtCount = 0;
+            document.getElementById('catchScore').textContent = 'Đã hứng: 0 / 5 bông hoa';
+            spawnGameFlower();
+            spawnTimer = setInterval(spawnGameFlower, 750);
+        }
+
+        function spawnGameFlower() {
+            const area = document.getElementById('catchArea');
+            if (!area || caughtCount >= 5) return;
+
+            const target = document.createElement('div');
+            target.className = 'game-flower-target';
+            const pal = pastelPalettes[Math.floor(Math.random() * pastelPalettes.length)];
+            target.innerHTML = createFlowerSVG(pal[0], pal[1]);
+
+            const maxLeft = area.clientWidth - 46;
+            target.style.left = Math.max(6, Math.random() * maxLeft) + 'px';
+            area.appendChild(target);
+
+            let posY = -42;
+            const speed = 2.1 + Math.random() * 1.3;
+            let collected = false;
+
+            const fallStep = setInterval(() => {
+                if (collected) {
+                    clearInterval(fallStep);
+                    return;
+                }
+                posY += speed;
+                target.style.top = posY + 'px';
+                if (posY > area.clientHeight + 10) {
+                    clearInterval(fallStep);
+                    target.remove();
+                }
+            }, 16);
+
+            target.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                if (collected || caughtCount >= 5) return;
+                collected = true;
+                clearInterval(fallStep);
+                target.remove();
+
+                caughtCount++;
+                document.getElementById('catchScore').textContent = `Đã hứng: ${caughtCount} / 5 bông hoa`;
+
+                if (caughtCount >= 5) {
+                    clearInterval(spawnTimer);
+                    setTimeout(() => {
+                        document.getElementById('game1Stage').classList.add('hidden');
+                        startGame2();
+                    }, 400);
+                }
+            });
+        }
+
+        /* --- BƯỚC 3: TRÒ CHƠI 2 - LẬT THẺ GHÉP ĐÔI --- */
+        const cardIcons = [
+            {
+                id: 'crown',
+                svg: `<svg width="34" height="34" viewBox="0 0 50 50"><path d="M8 36L12 16L25 26L38 16L42 36H8Z" fill="#ffd9a8" stroke="#e2a86b" stroke-width="2.5" stroke-linejoin="round"/><circle cx="12" cy="13" r="3" fill="#ffb7c9"/><circle cx="25" cy="10" r="3.5" fill="#b7e4dc"/><circle cx="38" cy="13" r="3" fill="#ffb7c9"/></svg>`
+            },
+            {
+                id: 'bow',
+                svg: `<svg width="36" height="36" viewBox="0 0 50 50"><path d="M25 25 C12 12, 6 24, 16 30 C10 34, 16 40, 25 28 C34 40, 40 34, 34 30 C44 24, 38 12, 25 25 Z" fill="#ffb7c9" stroke="#e58fa6" stroke-width="2"/><circle cx="25" cy="26" r="4" fill="#fff5f8" stroke="#e58fa6" stroke-width="2"/></svg>`
+            },
+            {
+                id: 'star',
+                svg: `<svg width="34" height="34" viewBox="0 0 50 50"><path d="M25 7L30.2 18.2L42.5 19.8L33.5 28.3L35.8 40.5L25 34.6L14.2 40.5L16.5 28.3L7.5 19.8L19.8 18.2L25 7Z" fill="#d9f2ec" stroke="#8fc9bc" stroke-width="2.2" stroke-linejoin="round"/></svg>`
+            }
+        ];
+
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let lockBoard = false;
+
+        function startGame2() {
+            document.getElementById('game2Stage').classList.remove('hidden');
+            const grid = document.getElementById('memoryGrid');
+            grid.innerHTML = '';
+            flippedCards = [];
+            matchedPairs = 0;
+            lockBoard = false;
+
+            const deck = [...cardIcons, ...cardIcons].sort(() => Math.random() - 0.5);
+
+            deck.forEach((item) => {
+                const card = document.createElement('div');
+                card.className = 'mem-card';
+                card.dataset.id = item.id;
+                card.innerHTML = `
+                    <div class="card-back" style="width:26px;height:26px;">${createFlowerSVG('#ffb7c9', '#ffffff')}</div>
+                    <div class="card-front">${item.svg}</div>
+                `;
+                card.addEventListener('click', () => flipCard(card));
+                grid.appendChild(card);
+            });
+        }
+
+        function flipCard(card) {
+            if (lockBoard || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                lockBoard = true;
+                const [c1, c2] = flippedCards;
+                if (c1.dataset.id === c2.dataset.id) {
+                    c1.classList.add('matched');
+                    c2.classList.add('matched');
+                    matchedPairs++;
+                    flippedCards = [];
+                    lockBoard = false;
+
+                    if (matchedPairs === 3) {
+                        setTimeout(() => {
+                            document.getElementById('game2Stage').classList.add('hidden');
+                            document.getElementById('envelopeStage').classList.remove('hidden');
+                        }, 450);
+                    }
+                } else {
+                    setTimeout(() => {
+                        c1.classList.remove('flipped');
+                        c2.classList.remove('flipped');
+                        flippedCards = [];
+                        lockBoard = false;
+                    }, 650);
+                }
+            }
+        }
+
+        /* --- BƯỚC 4: MỞ PHONG BÌ -> HOA NỞ TRÀN MÀN HÌNH RỒI BIẾN MẤT -> HIỆN ẢNH RÕ NÉT --- */
+        let letterOpened = false;
+
+        function openLetter() {
+            if (letterOpened) return;
+            letterOpened = true;
+            tryStartMusic();
+
+            const envelope = document.getElementById('envelope');
+            envelope.classList.add('open');
+
+            const burstLayer = document.getElementById('burstLayer');
+            burstLayer.innerHTML = '';
+
+            // Tạo 65 bông hoa pastel giống ban đầu nở bung phủ kín màn hình rồi tan biến
+            const totalBurst = 65;
+            const maxW = window.innerWidth;
+            const maxH = window.innerHeight;
+
+            for (let i = 0; i < totalBurst; i++) {
+                const bf = document.createElement('div');
+                bf.className = 'burst-flower';
+                const pal = pastelPalettes[i % pastelPalettes.length];
+                bf.innerHTML = createFlowerSVG(pal[0], pal[1]);
+
+                const size = 34 + Math.random() * 44;
+                bf.style.width = size + 'px';
+                bf.style.height = size + 'px';
+
+                // Phân bổ tỏa đều phủ khắp màn hình
+                const angle = (i / totalBurst) * Math.PI * 2 + (Math.random() * 0.4);
+                const radiusFactor = 0.15 + Math.random() * 0.85;
+                const tx = Math.cos(angle) * (maxW * 0.52) * radiusFactor;
+                const ty = Math.sin(angle) * (maxH * 0.52) * radiusFactor;
+                const sc = (0.85 + Math.random() * 0.75).toFixed(2);
+                const rot = Math.floor(Math.random() * 360) + 'deg';
+
+                bf.style.setProperty('--tx', tx + 'px');
+                bf.style.setProperty('--ty', ty + 'px');
+                bf.style.setProperty('--sc', sc);
+                bf.style.setProperty('--rot', rot);
+                bf.style.animationDelay = (Math.random() * 0.25) + 's';
+
+                burstLayer.appendChild(bf);
+            }
+
+            // Sau khi hoa nở tràn màn hình và bắt đầu tan biến, hiện tấm thiệp rõ nét 100%
+            setTimeout(() => {
+                document.getElementById('envelopeStage').classList.add('hidden');
+                document.getElementById('photoViewer').classList.add('visible');
+            }, 1150);
+
+            setTimeout(() => {
+                burstLayer.innerHTML = '';
+            }, 2200);
+        }
+
+        /* --- BƯỚC 5: ĐÓNG TẤM THIỆP -> HIỆN LỜI CẢM ƠN KẾT THÚC --- */
+        function closePhotoAndEnd() {
+            document.getElementById('photoViewer').classList.remove('visible');
+            setTimeout(() => {
+                document.getElementById('endingStage').classList.remove('hidden');
+            }, 350);
+        }
+
+        function reopenPhoto() {
+            document.getElementById('endingStage').classList.add('hidden');
+            document.getElementById('photoViewer').classList.add('visible');
+        }
+    </script>
+</body>
+</html>
